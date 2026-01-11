@@ -110,9 +110,11 @@ export default {
       context.root.$http(query).then((res) => {
         archives.loading = false;
         archives.labels = res.repository.labels.nodes;
+        
 
         if (archives.labels.length) {
           archives.label = archives.labels[0].name;
+          document.title = `${archives.label}`;
 
           getData();
         }

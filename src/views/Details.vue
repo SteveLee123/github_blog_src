@@ -46,6 +46,7 @@ export default {
         issue.title = title;
         issue.bodyHTML = bodyHTML;
         issue.labels = labels.nodes;
+        document.title = `${issue.title} - LAO Blog`;
       });
     };
 

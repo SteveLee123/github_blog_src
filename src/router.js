@@ -14,24 +14,12 @@ const router = new Router({
       path: '/archives/:id',
       name: 'archiveDetails',
       component: () => import(/* webpackChunkName: "archiveDetails" */ './views/Details.vue'),
+      meta: { title: '加载中...' },
     },
     {
       path: '/labels',
       name: 'labels',
       component: () => import(/* webpackChunkName: "labels" */ './views/Labels.vue'),
-    },
-    {
-      path: '/links',
-      name: 'links',
-      component: () => import(/* webpackChunkName: "labels" */ './views/Links.vue'),
-    },
-    {
-      path: '/board',
-      name: 'board',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "board" */ './views/Board.vue'),
     },
     {
       path: '/search',
@@ -48,6 +36,31 @@ const router = new Router({
       },
     },
   ],
+});
+
+router.afterEach((to) => {
+  // 1. 定义一个基础后缀
+  const siteName = 'LAO Blog';
+  // 2. 根据路由名称映射一些中文标题（可选）
+  const titleMap = {
+    'archives': '博客',
+    'labels': '标签',
+    'search': '搜索'
+  };
+  let pageTitle = "";
+  const mapTitle = titleMap[to.name] || '';
+  if (to.meta.title) {
+    pageTitle = mapTitle ? `${to.meta.title} - ${mapTitle}` : to.meta.title;
+  } else {
+    pageTitle = titleMap[to.name];
+  }
+  
+  // 3. 合成最终标题
+  document.title = pageTitle ? `${pageTitle} | ${siteName}` : siteName;
+  if (window._hmt) {
+    const path = to.fullPath;
+    window._hmt.push(['_trackPageview', path]);
+  }
 });
 
 export default router;

@@ -79,6 +79,7 @@ export default {
         archives.cursor = `"${pageInfo.endCursor}"`;
         archives.list = archives.list.concat(nodes);
         archives.totalCount = issueCount;
+        document.title = `${search.value}`;
       });
     };
 

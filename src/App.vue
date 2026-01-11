@@ -3,15 +3,7 @@
     <div class="main-wrap">
       <div class="header">
         <template v-if="global.mode === 'pc'">
-          <div class="breadcrumb">
-            <p v-text="global.name"></p>
-            <i class="iconfont icon-location"></i>
-          </div>
           <div class="navs flex">
-            <a class="nav-item nav-home flex flex-middle flex-center" href="https://chenjiahao.xyz" rel="noopener noreferer">
-              <span>盒子</span>
-              <i class="iconfont icon-home"></i>
-            </a>
             <div class="list flex flex-middle">
               <router-link class="nav-item flex flex-middle flex-center" :to="nav.path" v-for="(nav, index) in navs" :key="index">
                 <span v-text="nav.name"></span>
@@ -24,8 +16,8 @@
             <img src="img/avatar.png" alt="">
           </a>
           <div class="flex-item">
-            <h3 class="font-clg">McChen</h3>
-            <p>No pain, no gains!</p>
+            <h3 class="font-clg">LAO</h3>
+            <p>放下傲慢，拥抱市场</p>
           </div>
         </div>
       </div>
@@ -51,7 +43,7 @@
               <a class="close flex flex-middle flex-center" href="javascript:;" @click="toggleModal">关闭</a>
             </div>
             <div class="navs flex flex-center flex-middle">
-              <a class="nav-item nav-home flex flex-middle flex-center" href="https://chenjiahao.xyz" rel="noopener noreferer">
+              <a class="nav-item nav-home flex flex-middle flex-center" href="https://stevelee123.github.io" rel="noopener noreferer">
                 <i class="iconfont icon-home"></i>
               </a>
               <a class="nav-item flex flex-middle flex-center" href="javascript:;" v-for="(nav, index) in navs" :key="index" @click="clickNav(nav.path)">
@@ -87,20 +79,8 @@ export default {
       path: '/labels',
       name: '标签',
     }, {
-      path: '/links',
-      name: '友链',
-    }, {
-      path: '/about',
-      name: '关于',
-    }, {
-      path: '/board',
-      name: '留言',
-    }, {
       path: '/search',
       name: '搜索',
-    }, {
-      path: '/subscribe',
-      name: '订阅',
     }];
 
     const global = reactive({
@@ -379,6 +359,9 @@ export default {
         background-color: #f0f0f0;
         transition: all 0.5s;
         color: #555555;
+        display: flex; 
+      align-items: center;
+      justify-content: center;
 
         &:hover {
           background-color: #dfdfdf;
@@ -394,19 +377,12 @@ export default {
 
         @for $i from 1 through 7 {
           .nav-item:nth-child(#{$i}) {
-            display: none;
             animation: fadeIn 0.8s #{0.1 * ($i - 1)}s both;
           }
         }
       }
 
-      &:hover {
-        .list {
-          .nav-item {
-            display: flex;
-          }
-        }
-      }
+      
     }
 
     .info {

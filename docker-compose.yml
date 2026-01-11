@@ -7,11 +7,10 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-      # 将 Mac 宿主机的 SSH 代理 Socket 挂载到容器内
-      - ${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}
-      # 挂载 Git 配置，确保有用户名和邮箱
+      - ~/.ssh/id_ed25519:/root/.ssh/id_ed25519:ro
       - ~/.gitconfig:/root/.gitconfig:ro
     environment:
       - NODE_ENV=development
-      # 告诉容器 SSH 代理的具体位置
-      - SSH_AUTH_SOCK=${SSH_AUTH_SOCK}
+      # 重点：告诉容器去这个固定路径找钥匙
+      - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
+
