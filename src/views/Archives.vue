@@ -115,7 +115,6 @@ export default {
       // 如果当前缓存的指针还没到最后一页
       if (archives.cursors.length < archives.totalPages) {
         alert(`受接口限制，请通过“下一页”逐步加载。目前最远可跳至第 ${archives.cursors.length} 页`);
-        const lastAvailable = archives.cursors.length;
         jumpPage.value = archives.page;
       } else {
         // 如果已经加载过末页指针

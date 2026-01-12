@@ -317,8 +317,34 @@ export default {
   .pagination {
     margin-top: 40px; gap: 10px;
     .page-jump {
-      display: flex; align-items: center; margin: 0 10px; font-size: 13px; color: #888;
-      input { width: 45px; height: 28px; margin: 0 5px; text-align: center; border: 1px solid #ddd; border-radius: 4px; outline: none; }
+      display: flex;
+      align-items: center;
+      margin: 0 10px;
+      font-size: 13px;
+      color: #888;
+
+      input {
+        width: 45px;
+        height: 28px;
+        margin: 0 5px;
+        padding: 0;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        outline: none;
+        transition: border-color 0.3s;
+
+        &:focus {
+          border-color: #1abc9c;
+        }
+
+        // 移除数字增减箭头
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+      }
     }
   }
   .btn-page {
