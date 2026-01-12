@@ -21,12 +21,15 @@
         v-for="archive in archives.list"
         :key="archive.number"
       >
-        <router-link
-          :to="`/archives/${archive.number}`"
-          :title="archive.title"
-        >
-          {{ archive.title }}
-        </router-link>
+        <div class="archive-header flex flex-middle">
+          <span class="date" v-text="formatTime(archive.createdAt, 'yyyy-MM-dd')"></span>
+          <router-link
+            :to="`/archives/${archive.number}`"
+            :title="archive.title"
+          >
+            {{ archive.title }}
+          </router-link>
+        </div>
         <p>{{ archive.bodyText }}</p>
       </li>
     </ul>
@@ -64,6 +67,7 @@
 
 <script>
 import { debounce } from '../utils/utils';
+import { formatTime, getZodiac } from '../utils/utils';
 
 export default {
   name: 'Search',
@@ -80,13 +84,13 @@ export default {
       },
     };
   },
-
   created() {
     // ✅ 在生命周期里创建 debounce，只创建一次
     this.onInputDebounced = debounce(this.onInput, 300);
   },
 
   methods: {
+    formatTime,
     handleInput() {
       // Vue 事件层，不直接 debounce
       this.onInputDebounced();
@@ -124,6 +128,7 @@ export default {
           }
           nodes {
             ... on Issue {
+              createdAt,
               title
               bodyText
               number
@@ -148,7 +153,7 @@ export default {
           this.archives.none = true;
         }
 
-        document.title = this.search;
+        document.title = `${this.search} - 搜索 - LAO Blog`;
       });
     },
   },
@@ -224,30 +229,42 @@ export default {
       list-style: none;
       .archive {
         position: relative;
+        line-height: 1.5;
+        .archive-header {
+          display: flex;
+          align-items: baseline; // 或者是 center，取决于你想要文字对齐基准线还是中心
+          margin-bottom: 8px;    // 与下方描述文字的间距
 
-        a {
-          display: block;
-          position: relative;
-          font-size: $sizeMedium;
-          font-weight: bold;
-          color: $mainStrong;
-          line-height: 1.5;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-          transition: all 0.5s;
+          .date {
+            font-size: $sizeSmall;
+            color: #888888;
+            white-space: nowrap;
+            margin-right: 12px; // 增加与标题的间距
+            flex-shrink: 0;     // 防止日期被压缩
+          }
 
-          &:hover,&:active {
-            color: #1abc9c;
+          a {
+            // 移除 display: block; 
+            display: inline-block; 
+            font-size: $sizeMedium;
+            font-weight: bold;
+            color: $mainStrong;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: all 0.5s;
+
+            &:hover, &:active {
+              color: #1abc9c;
+            }
           }
         }
-
         p {
           color: #555555;
           font-size: $sizeNormal;
           line-height: 1.5;
           max-height: 96px;
-          margin-top: 16px;
+          margin-top: 8px;
           display: -webkit-box;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 4;

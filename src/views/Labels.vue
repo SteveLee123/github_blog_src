@@ -1,7 +1,6 @@
 <template>
   <div class="page-labels">
     <div class="nav flex flex-middle" v-if="archives.labels.length">
-      <div class="name flex flex-center flex-middle">标签</div>
       <div class="labels flex-item flex">
         <a 
           class="label flex flex-middle flex-center" 
@@ -23,12 +22,15 @@
         </div>
         <ul class="archives">
           <li class="archive flex flex-middle" v-for="archive in archives.list" :key="archive.number">
-            <span v-text="formatTime(archive.createdAt, 'MM-dd')"></span>
-            <router-link :to="`/archives/${archive.number}`" v-text="archive.title" :title="archive.title"></router-link>
-            <div class="others flex-item flex-end flex flex-middle">
-              <i class="iconfont icon-comment"></i>
-              <span v-text="archive.comments.totalCount"></span>
+            <div class="archive-header flex flex-middle">
+              <span class="date" v-text="formatTime(archive.createdAt, 'yyyy-MM-dd')"></span>
+              <router-link class="title" :to="`/archives/${archive.number}`" v-text="archive.title" :title="archive.title"></router-link>
+              <div class="others flex-item flex-end flex flex-middle">
+                <i class="iconfont icon-comment"></i>
+                <span v-text="archive.comments.totalCount"></span>
+              </div>
             </div>
+            <p class="body-text">{{ archive.bodyText }}</p>
           </li>
         </ul>
       </div>
@@ -88,7 +90,7 @@ export default {
       labels: [],
       label: null,
       page: 1,
-      pageSize: 2,
+      pageSize: 5,
       cursors: [null],
       loading: false,
       none: false,
@@ -120,7 +122,7 @@ export default {
           ) {
             totalCount
             nodes {
-              title, createdAt, number,
+              title, createdAt, number, bodyText
               comments(first: null) { totalCount }
             }
             pageInfo { endCursor, hasNextPage }
@@ -149,7 +151,6 @@ export default {
         };
 
         archives.list = nodes;
-        document.title = `${archives.label}`;
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }).finally(() => {
         archives.loading = false;
@@ -200,6 +201,7 @@ export default {
           // 2. 更新页码
           archives.page = newPage;
           jumpPage.value = newPage;
+          document.title = `第${newPage}页 - ${newQuery.label} - 标签 - LAO Blog`;
 
           // 3. 执行数据请求
           getData();
@@ -303,13 +305,71 @@ export default {
         p, strong { font-size: $sizeLarge; color: $mainStrong; }
         strong { margin-top: 8px;}
       }
-      .archives .archive {
-        position: relative; line-height: 44px;
-        span { font-size: $sizeSmall; color: #888888; white-space: nowrap; margin-right: 4px; }
-        a { font-size: $sizeMedium; color: $mainStrong; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; transition: all 0.5s;
-          &:hover,&:active { color: #1abc9c; }
+
+      /* 在 <style> 中找到 .archives 相关的部分并替换/更新 */
+      .archives {
+        .archive {
+          position: relative;
+          display: block; // 确保是块级排列，不再是 flex 强制一行
+          
+          // 第一行容器
+          .archive-header {
+            width: 100%;
+            line-height: 32px; // 适当缩小行高，因为下面有正文
+
+            .date {
+              font-size: $sizeSmall;
+              color: #888888;
+              white-space: nowrap;
+              margin-right: 12px; // 增加间距
+            }
+
+            .title {
+              flex: 1; // 标题占据剩余空间
+              font-size: $sizeMedium;
+              font-weight: bold;
+              color: $mainStrong;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+              transition: all 0.5s;
+
+              &:hover {
+                color: #1abc9c;
+              }
+            }
+
+            .others {
+              color: #bbbbbb;
+              margin-left: 8px;
+              font-size: 13px;
+
+              i { font-size: 14px; }
+              span { margin-left: 4px; color: #bbbbbb; }
+            }
+          }
+
+          // 第二行正文
+          .body-text {
+            color: #777777; // 颜色稍微调淡一点点以区分标题
+            font-size: $sizeNormal;
+            line-height: 1.6;
+            max-height: 96px;
+            margin-top: 8px; // 标题与正文的间距
+            margin-bottom: 0;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3; // 建议 3 行更美观
+            overflow: hidden;
+            word-break: break-all;
+          }
         }
-        .others { color: #bbbbbb; margin-left: 8px; span { margin-left: 4px; color: #bbbbbb; } }
+
+        .archive + .archive {
+          margin-top: 24px; // 调整列表项之间的间距
+          padding-top: 24px;
+          border-top: 1px solid #f5f5f5; // 可选：加一条浅色分割线
+        }
       }
     }
   }
