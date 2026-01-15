@@ -15,6 +15,8 @@
                 :to="`/archives/${archive.number}`" 
                 v-text="archive.title" 
                 :title="archive.title"
+                target="_blank"
+                rel="noopener noreferrer"
               ></router-link>
               <div class="others flex-item flex-end flex flex-middle">
                 <i class="iconfont icon-comment"></i>
@@ -161,7 +163,7 @@ export default {
 
       const cursor = archives.cursors[page - 1];
       const query = `query {
-        repository(owner: "SteveLee123", name: "github_blog_src") {
+        repository(owner: "Young-LAO", name: "github_blog_src") {
           issues(
             orderBy: {field: CREATED_AT, direction: DESC},
             first: ${archives.pageSize},
@@ -270,7 +272,7 @@ export default {
       }
 
       const query = `query {
-        repository(owner: "SteveLee123", name: "github_blog_src") {
+        repository(owner: "Young-LAO", name: "github_blog_src") {
           issues(
             orderBy: {field: CREATED_AT, direction: DESC},
             first: ${archives.pageSize},
@@ -431,16 +433,22 @@ export default {
     gap: 10px; // 适当缩小间距以容纳更多按钮
 
     .page-jump {
-      display: flex;
+      display: flex !important;
+      flex-direction: row;      /* 确保横向排列 */
       align-items: center;
-      margin: 0 10px;
+      gap: 5px;                 /* 元素间的间距 */
+      margin: 0 5px;
       font-size: 13px;
       color: #888;
+      white-space: nowrap;      /* 防止文字换行 */
+      span {
+        display: inline-block;  /* 确保 span 不占整行 */
+      }
 
       input {
         width: 45px;
         height: 28px;
-        margin: 0 5px;
+        margin: 0;
         padding: 0;
         text-align: center;
         border: 1px solid #ddd;

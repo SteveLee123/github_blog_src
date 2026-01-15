@@ -116,7 +116,7 @@ export default {
 
       const query = `query {
         search(
-          query: "${this.search} repo:SteveLee123/github_blog_src",
+          query: "${this.search} repo:Young-LAO/github_blog_src",
           type: ISSUE,
           first: 10,
           after: ${this.archives.cursor}
@@ -136,6 +136,7 @@ export default {
           }
         }
       }`;
+      console.log(query);
 
 
       this.$http(query).then((res) => {

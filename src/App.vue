@@ -16,7 +16,7 @@
             <img src="img/avatar.png" alt="">
           </a>
           <div class="flex-item">
-            <h3 class="font-clg">LAO</h3>
+            <h3>Young-LAO</h3>
             <p>放下傲慢，拥抱市场</p>
           </div>
         </div>
@@ -26,9 +26,7 @@
           <router-view class="page"/>
         </transition>
       </div>
-      <div class="footer flex flex-middle flex-center">
-        <a target="_blank" rel="noopener noreferrer" href="https://beian.miit.gov.cn/">京ICP备19008130号-2</a>
-      </div>
+
     </div>
 
     <template v-if="global.mode === 'mobile'">
@@ -128,7 +126,7 @@ export default {
 
     const clickNav = (path) => {
       toggleModal();
-      if (!~context.root.$route.path.indexOf(path)) {
+      if (context.root.$route.path !== path) {
         context.root.$router.push(path);
       }
     };

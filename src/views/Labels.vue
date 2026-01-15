@@ -10,6 +10,7 @@
           :key="item.name" 
           v-text="item.name" 
           @click="changeLabel(item.name)"
+          :style="{'background-color': `#${item.color}`, 'color': `${isLightColor(item.color) ? '#000000' : '#ffffff'}`}"
         ></a>
       </div>
     </div>
@@ -24,7 +25,7 @@
           <li class="archive flex flex-middle" v-for="archive in archives.list" :key="archive.number">
             <div class="archive-header flex flex-middle">
               <span class="date" v-text="formatTime(archive.createdAt, 'yyyy-MM-dd')"></span>
-              <router-link class="title" :to="`/archives/${archive.number}`" v-text="archive.title" :title="archive.title"></router-link>
+              <router-link class="title" :to="`/archives/${archive.number}`" v-text="archive.title" :title="archive.title" target="_blank" rel="noopener noreferrer"></router-link>
               <div class="others flex-item flex-end flex flex-middle">
                 <i class="iconfont icon-comment"></i>
                 <span v-text="archive.comments.totalCount"></span>
@@ -76,7 +77,7 @@
 
 <script>
 import { ref, reactive, watch, onMounted } from '@vue/composition-api';
-import { formatTime } from '../utils/utils';
+import { isLightColor, formatTime } from '../utils/utils';
 
 export default {
   setup(props, context) {
@@ -113,7 +114,7 @@ export default {
       }
 
       const query = `query {
-        repository(owner: "SteveLee123", name: "github_blog_src") {
+        repository(owner: "Young-LAO", name: "github_blog_src") {
           issues(
             filterBy: {labels: "${archives.label}"}, 
             orderBy: {field: CREATED_AT, direction: DESC}, 
@@ -161,8 +162,8 @@ export default {
     const getLabels = () => {
       $loading.show('查询标签中...');
       const query = `query {
-        repository(owner: "SteveLee123", name: "github_blog_src") {
-          labels(first: 100) { nodes { name } }
+        repository(owner: "Young-LAO", name: "github_blog_src") {
+          labels(first: 100) { nodes { name, color } }
         }
       }`;
       $http(query).then((res) => {
@@ -260,7 +261,7 @@ export default {
           return;
         }
         const q = `query {
-          repository(owner: "SteveLee123", name: "github_blog_src") {
+          repository(owner: "Young-LAO", name: "github_blog_src") {
             issues(filterBy: {labels: "${archives.label}"}, first: ${archives.pageSize}, after: ${currentCursor ? `"${currentCursor}"` : null}) {
               pageInfo { endCursor }
             }
@@ -282,7 +283,7 @@ export default {
       nextPage: () => changePage(1),
       prevPage: () => changePage(-1),
       goFirstPage, goLastPage, goToPage, changeLabel,
-      startSecretTimer, clearSecretTimer, handleSecretClick
+      startSecretTimer, clearSecretTimer, handleSecretClick, isLightColor
     };
   }
 };
@@ -294,7 +295,7 @@ export default {
   .page-labels {
     .nav { margin-bottom: 24px;
       .name { font-size: $sizeNormal; width: 40px; height: 40px; background-color: #f0f0f0; border-radius: 50%; color: #555555; margin-right: 8px;}
-      .labels { flex-wrap: wrap;
+      .labels { flex-wrap: wrap; margin-left: 10px;
         .label { font-size: $sizeSmall; color: #999999; padding: 0 12px; height: 32px; margin-right: 8px; margin-bottom: 8px; border-radius: 15px; background-color: #f6f6f6; transition: all 0.5s; cursor: pointer;
           &.active, &:hover, &:active { color: $mainStrong; background-color: #f0f0f0;}
         }
@@ -377,16 +378,22 @@ export default {
   .pagination {
     margin-top: 40px; gap: 10px;
     .page-jump {
-      display: flex;
+      display: flex !important;
+      flex-direction: row;      /* 确保横向排列 */
       align-items: center;
+      gap: 5px;                 /* 元素间的间距 */
       margin: 0 10px;
       font-size: 13px;
       color: #888;
+      white-space: nowrap;      /* 防止文字换行 */
+      span {
+        display: inline-block;  /* 确保 span 不占整行 */
+      }      
 
       input {
         width: 45px;
         height: 28px;
-        margin: 0 5px;
+        margin: 0;
         padding: 0;
         text-align: center;
         border: 1px solid #ddd;
